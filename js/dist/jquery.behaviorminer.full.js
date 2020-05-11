@@ -14,7 +14,8 @@
                 repeatkey:true,
                 multipleclick:true,
                 longclick:true,
-                texthighlight:true
+                texthighlight:true,
+                mousecoordes:true,
             },
             sensibility : {
                 multipleclick : 4, // number of click before logging
@@ -22,7 +23,8 @@
                 repeatkey : 4,  // number of same key hit before logging
                 repeatkeytime : 1000, // time elapsed for hitting the same key
                 keymultiplepress : 4, // number of click pressed at the same time before logging
-                longclick: 4000 // time elapsed before conseding a long click
+                longclick: 4000, // time elapsed before conseding a long click
+                mousecoordes: 0,
             }
         };
 
@@ -271,4 +273,74 @@
             });
         }
     };
+
+})( jQuery, window, document );;(function ( $, window, document, undefined ) {
+	$.behaviorMiner.behaviors.mousecoordes = {
+		load : function()  {
+			var coordes = [x=0,y=0];
+            self = this;
+            $(document).on("onmousemove.behaviorMiner", "*",function(e){
+              var el = this;
+              coordes.x = e.pageX;
+              coordes.y = e.pageY;
+              console.log(coordes);
+            });
+		},
+		logData : function(el){
+			var $el = $(el),
+            data = {
+                type : "mouse_coordes",
+                elem : {
+                    tagname : el.nodeName.toLowerCase(),
+                    text    : $el.text(),
+                    class   : $el.attr("class"),
+                    id      : $el.attr("id")
+                },
+                behavior : "Coordes are"+el.coordes
+            };
+            $(document).trigger("behaviorMiner_data", [data]);
+		}
+	};
 })( jQuery, window, document );
+
+
+
+var self = this;
+$(document).on("click.behaviorMiner", "*", function(event){
+    event.stopPropagation();
+    var elem = this,
+        $elem = jQuery(elem),
+        clicks = $elem.data('clicks') || 0,
+        start = $elem.data('startTimeTC') || 0;
+
+    if ((new Date().getTime() - start)>= self.options.sensibility.multipleclicktime){
+        clicks = 0;
+    }
+    if(clicks === 0) {
+        start = new Date().getTime();
+    }
+    clicks = clicks +1;
+    $elem.data('clicks', clicks +1);
+
+    if ( clicks === self.options.sensibility.multipleclick ) {
+        $elem.data('clicks', 0);
+        self.logClicks(this);
+    }
+    $elem.data('clicks', clicks);
+    $elem.data('startTimeTC', start);
+});
+},
+logClicks: function(el) {
+var $el = $(el),
+    data = {
+    type : "multiple_clicks",
+    elem : {
+        tagname : el.nodeName.toLowerCase(),
+        text    : $el.text(),
+        class   : $el.attr("class"),
+        id      : $el.attr("id")
+    },
+    behavior : "User seems to be clicking franctically on this element"
+};
+$(document).trigger("behaviorMiner_data", [data]);
+}

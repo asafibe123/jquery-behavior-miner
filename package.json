@@ -1,5 +1,5 @@
 {
-  "name": "behaviorMiner",
+  "name": "behaviorminer",
   "version": "0.1.0",
   "dependencies": {},
   "devDependencies": {
@@ -10,5 +10,20 @@
   },
   "engines": {
     "node": ">=0.8.0"
-  }
+  },
+  "description": "This plugin tracks behaviors that are considered agitated. The plugin emit events that can be logged in your system, or on Google Analytics (GA plugin  included).",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/posabsolute/jquery-behavior-miner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/posabsolute/jquery-behavior-miner/issues"
+  },
+  "homepage": "https://github.com/posabsolute/jquery-behavior-miner#readme"
 }
